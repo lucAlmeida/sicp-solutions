@@ -1,0 +1,55 @@
+(define (make-segment start end)
+  (cons start end))
+
+(define (start-segment segment)
+  (car segment))
+
+(define (end-segment segment)
+  (cdr segment))
+
+(define (make-point x y)
+  (cons x y))
+
+(define (x-point point)
+  (car point))
+
+(define (y-point point)
+  (cdr point))
+
+(define (make-rectangle x y width height)
+  (cons (cons x y)
+	(cons (+ x width) (+ y height))))
+
+(define (horizontal-rectangle rectangle)
+  (car rectangle))
+
+(define (vertical-rectangle rectangle)
+  (cdr rectangle))
+
+(define (top-rectangle rectangle)
+  (
+
+(define (make-rectangle h-segment v-segment)
+  (cons h-segment v-segment))
+
+(define (h-segment-rectangle rectangle)
+  (car rectangle))
+
+(define (v-segment-rectangle rectangle)
+  (cdr rectangle))
+
+(define (width segment)
+  (- (x-point (end-segment segment))
+     (x-point (start-segment segment))))
+
+(define (height segment)
+  (- (y-point (end-segment segment))
+     (y-point (start-segment segment))))
+
+(define (perimeter rectangle)
+  (+ (* 2 (width (h-segment rectangle)))
+     (* 2 (height (v-segment rectangle)))))
+
+(define (area rectangle)
+  (* (width (h-segment rectangle))
+     (height (v-segment rectangle))))

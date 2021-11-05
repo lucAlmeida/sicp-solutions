@@ -1,0 +1,5 @@
+(define (reverse lst)
+  (define (reverse-aux lst rev)
+    (cond ((null? lst) rev)
+	  (else (reverse-aux (cdr lst) (cons (car lst) rev)))))
+  (reverse-aux lst '()))
