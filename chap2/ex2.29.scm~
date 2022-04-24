@@ -1,0 +1,71 @@
+#lang racket
+
+(define (make-mobile left right)
+  (list left right))
+
+(define (make-branch length structure)
+  (list length structure))
+
+(define (left-branch mobile)
+  (car mobile))
+
+(define (right-branch mobile)
+  (car (cdr mobile)))
+
+(define (branch-length branch)
+  (car branch))
+
+(define (branch-structure branch)
+  (car (cdr branch)))
+
+(define (total-weight mobile)
+  (let ((left-branch-structure (branch-structure (left-branch mobile)))
+		(right-branch-structure (branch-structure (right-branch mobile))))									  									  
+	(cond ((and (pair? left-branch-structure)
+				(pair? right-branch-structure))
+		   (+ (total-weight left-branch-structure)
+			  (total-weight right-branch-structure)))
+		  ((pair? left-branch-structure)
+		   (+ (total-weight left-branch-structure) right-branch-structure))
+		  ((pair? right-branch-structure)
+		   (+ left-branch-structure (total-weight right-branch-structure)))
+		  (else (+ left-branch-structure right-branch-structure)))))
+
+(define (is-balanced mobile)
+  (letrec ((branch-left (left-branch mobile))
+		   (branch-right (right-branch mobile))
+		   (calculate-torque
+		  	(lambda (branch) (* (branch-length branch)
+								(if (pair? (branch-structure branch))
+                                                                    (total-weight (branch-structure branch))
+                                                                    (branch-structure branch))))))
+	(cond ((and (pair? (branch-structure branch-left))
+				(pair? (branch-structure branch-right)))
+		   (and (is-balanced (branch-structure branch-left))
+				(is-balanced (branch-structure branch-right))
+				(eq? (calculate-torque branch-left)
+					 (calculate-torque branch-right))))
+		  ((pair? (branch-structure branch-left))
+		   (and (is-balanced (branch-structure branch-left))
+				(eq? (calculate-torque branch-left)
+					 (calculate-torque branch-right))))
+		  ((pair? (branch-structure branch-right))
+		   (and (is-balanced (branch-structure branch-right))
+				(eq? (calculate-torque branch-left)
+					 (calculate-torque branch-right))))
+		  (else (eq? (calculate-torque branch-left)
+					 (calculate-torque branch-right))))))
+
+(define BRANCH-1 (make-branch 10 30))
+(define BRANCH-2 (make-branch 20 70))
+(define BRANCH-3 (make-branch 12 (make-mobile BRANCH-1 BRANCH-2)))
+
+(define MOBILE-1 (make-mobile BRANCH-1 BRANCH-3))
+(define MOBILE-2 (make-mobile BRANCH-3 BRANCH-2))
+
+(define BRANCH-A (make-branch 10 10))
+(define BRANCH-B (make-branch 20 5))
+(define BRANCH-C (make-branch 3 20))
+
+(define MOBILE-A (make-mobile BRANCH-A BRANCH-B))
+(define MOBILE-B (make-mobile BRANCH-C (make-branch 4 MOBILE-A)))
